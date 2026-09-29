@@ -1,0 +1,160 @@
+// Prisma schema for Boba Bash Workshops
+// PostgreSQL (Neon recommended for Vercel)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  ORGANIZER
+  WORKSHOP_MANAGER
+}
+
+enum WorkshopFormat {
+  ONLINE
+  IN_PERSON
+}
+
+enum WorkshopStatus {
+  DRAFT
+  PUBLISHED
+  REGISTRATION_CLOSED
+  FULLY_BOOKED
+  CANCELLED
+  COMPLETED
+}
+
+enum OrganizationStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum RegistrationStatus {
+  CONFIRMED
+  CANCELLED
+}
+
+enum SessionTarget {
+  ORGANIZER
+  ATTENDEE
+}
+
+model Organization {
+  id          String             @id @default(cuid())
+  name        String
+  slug        String             @unique
+  description String?
+  status      OrganizationStatus @default(ACTIVE)
+  isFeatured  Boolean            @default(false) // Boba Bash Lahore
+  logoUrl     String?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  organizers    Organizer[]
+  workshops     Workshop[]
+
+  @@index([status])
+  @@index([isFeatured])
+}
+
+model Organizer {
+  id             String   @id @default(cuid())
+  name           String
+  username       String   @unique
+  passwordHash   String
+  role           Role     @default(ORGANIZER)
+  organizationId String?
+  permissions    String[] @default([]) // granular overrides, e.g. "workshops:manage"
+  active         Boolean  @default(true)
+  mustChangePassword Boolean @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  workshops    Workshop[]
+  sessions     Session[]
+
+  @@index([organizationId])
+  @@index([active])
+}
+
+model Workshop {
+  id                 String          @id @default(cuid())
+  slug               String          @unique
+  organizationId     String
+  organizerId        String
+  title              String
+  description        String
+  coverImageUrl      String?
+  startsAt           DateTime
+  endsAt             DateTime
+  format             WorkshopFormat
+  location           String?
+  meetingUrl         String?
+  meetingUrlAddedAt  DateTime?
+  capacity           Int?
+  status             WorkshopStatus  @default(DRAFT)
+  manualClosed       Boolean         @default(false) // organizer closed registration
+  remindersSentAt    DateTime?
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizer    Organizer    @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  registrations Registration[]
+
+  @@index([status, startsAt])
+  @@index([organizationId, status])
+  @@index([organizerId])
+  @@index([startsAt])
+}
+
+model Registration {
+  id             String             @id @default(cuid())
+  workshopId     String
+  attendeeEmail  String
+  status         RegistrationStatus @default(CONFIRMED)
+  secureTokenHash String
+  tokenExpiresAt DateTime
+  notifiedAt     DateTime?
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  workshop Workshop @relation(fields: [workshopId], references: [id], onDelete: Cascade)
+
+  @@unique([workshopId, attendeeEmail])
+  @@index([attendeeEmail])
+  @@index([tokenExpiresAt])
+}
+
+model Session {
+  id           String        @id @default(cuid())
+  userId       String
+  target       SessionTarget
+  tokenHash    String        @unique
+  expiresAt    DateTime
+  createdAt    DateTime      @default(now())
+  ip           String?
+  userAgent    String?
+
+  organizer Organizer @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model RateLimit {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  count     Int      @default(0)
+  windowStart DateTime @default(now())
+  expiresAt DateTime
+
+  @@index([expiresAt])
+}

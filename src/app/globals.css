@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Boba Bash brand tokens (from the official branding guide) ── */
+:root {
+  --bubble: #a9d8ee;
+  --bubble-ink: #274156;
+  --surface: #fbf6e8;
+  --surface-alt: #f0e9d8;
+  --ink: #3d2b18;
+  --ink-muted: #6b5842;
+  --ink-soft: #9a8064;
+  --line: #3d2b18;
+  --goldenrod: #f2c14e;
+  --mint: #c0dfc6;
+  --danger: #b4432f;
+  --success: #3d7a44;
+
+  /* shadcn-compatible HSL vars */
+  --background: 43 47% 95%;        /* #fbf6e8 */
+  --foreground: 27 34% 17%;        /* #3d2b18 */
+  --card: 43 47% 95%;
+  --card-foreground: 27 34% 17%;
+  --popover: 43 47% 95%;
+  --popover-foreground: 27 34% 17%;
+  --primary: 27 34% 17%;           /* ink */
+  --primary-foreground: 43 47% 95%;
+  --secondary: 203 60% 80%;        /* bubble */
+  --secondary-foreground: 203 36% 24%; /* bubble-ink */
+  --muted: 41 39% 89%;             /* surface-alt */
+  --muted-foreground: 30 24% 34%;  /* ink-muted */
+  --accent: 41 39% 89%;
+  --accent-foreground: 27 34% 17%;
+  --destructive: 11 58% 45%;       /* #b4432f */
+  --destructive-foreground: 0 0% 100%;
+  --border: 27 34% 17%;
+  --input: 27 34% 17%;
+  --ring: 203 36% 24%;
+  --radius: 0.75rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    background-image: radial-gradient(rgba(61, 43, 24, 0.045) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display;
+  }
+  ::selection {
+    background: var(--goldenrod);
+    color: var(--ink);
+  }
+}
+
+@layer components {
+  /* Speech-bubble pill heading — signature Boba Bash element */
+  .bubble-pill {
+    @apply relative inline-block;
+  }
+  .bubble-pill-tail {
+    @apply absolute bottom-0 left-9 z-0 h-4 w-4 translate-y-1/2 rotate-45 border-b-2 border-r-2 border-bubble-ink bg-bubble;
+  }
+  .bubble-pill-body {
+    @apply relative z-10 inline-flex items-center gap-3 rounded-full border-2 border-bubble-ink bg-bubble px-6 py-2.5;
+  }
+
+  /* Card with hard offset shadow */
+  .brand-card {
+    @apply border-2 border-line bg-surface shadow-card;
+  }
+
+  /* Button with pressed control shadow */
+  .brand-control {
+    @apply border-2 border-line shadow-control;
+  }
+
+  .brand-input {
+    @apply flex h-11 w-full rounded-lg border-2 border-line bg-white px-3.5 py-2 font-sans text-[15px] text-ink shadow-control placeholder:text-ink-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bubble-ink focus-visible:ring-offset-2 focus-visible:ring-offset-surface disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .brand-label {
+    @apply mb-1.5 block font-display text-sm font-bold text-ink;
+  }
+
+  .field-error {
+    @apply mt-1.5 text-sm font-medium text-destructive;
+  }
+}

@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Boba Bash Branding Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Poppins:ital,wght@0,400;0,500;0,600;1,500&family=JetBrains+Mono&display=swap" rel="stylesheet" />
+<style>
+	:root {
+		--bubble: #a9d8ee;
+		--bubble-ink: #274156;
+		--surface: #fbf6e8;
+		--surface-alt: #f0e9d8;
+		--ink: #3d2b18;
+		--ink-muted: #6b5842;
+		--ink-soft: #9a8064;
+		--line: #3d2b18;
+		--goldenrod: #f2c14e;
+	}
+	* { box-sizing: border-box; }
+	body { margin: 0; font-family: 'Poppins', sans-serif; color: var(--ink); background: #fff; }
+	.font-display { font-family: 'Baloo 2', sans-serif; }
+	.font-bold { font-weight: 700; }
+
+	/* type scale, guessed from usage */
+	.text-caption { font-size: 0.8rem; }
+	.text-body { font-size: 0.95rem; }
+	.text-subheading { font-size: 1.15rem; }
+	.text-heading { font-size: 1.4rem; }
+	.text-title { font-size: 1.9rem; }
+
+	.text-ink { color: var(--ink); }
+	.text-ink-muted { color: var(--ink-muted); }
+	.text-ink-soft { color: var(--ink-soft); }
+	.text-bubble-ink { color: var(--bubble-ink); }
+	.bg-surface { background: var(--surface); }
+	.bg-surface-alt { background: var(--surface-alt); }
+	.bg-bubble { background: var(--bubble); }
+	.border-line { border-color: var(--line); }
+	.border-bubble-ink { border-color: var(--bubble-ink); }
+
+	.shadow-card { box-shadow: 3px 3px 0 rgba(0,0,0,0.08); }
+	.shadow-control { box-shadow: 0 2px 0 0 rgba(0,0,0,0.25); }
+
+	/* layout utility stand-ins, just enough to render the pasted components */
+	.relative { position: relative; }
+	.absolute { position: absolute; }
+	.inline-block { display: inline-block; }
+	.inline-flex { display: inline-flex; }
+	.flex { display: flex; }
+	.flex-col { flex-direction: column; }
+	.flex-1 { flex: 1 1 0%; }
+	.flex-wrap { flex-wrap: wrap; }
+	.items-center { align-items: center; }
+	.items-start { align-items: flex-start; }
+	.justify-between { justify-content: space-between; }
+	.justify-center { justify-content: center; }
+	.gap-1\.5 { gap: 6px; }
+	.gap-2 { gap: 8px; }
+	.gap-3 { gap: 12px; }
+	.gap-4 { gap: 16px; }
+	.rounded-full { border-radius: 999px; }
+	.border { border-width: 1px; border-style: solid; }
+	.border-2 { border-width: 2px; border-style: solid; }
+	.px-3 { padding-left: 12px; padding-right: 12px; }
+	.px-5 { padding-left: 20px; padding-right: 20px; }
+	.px-6 { padding-left: 24px; padding-right: 24px; }
+	.py-0\.5 { padding-top: 2px; padding-bottom: 2px; }
+	.py-2\.5 { padding-top: 10px; padding-bottom: 10px; }
+	.p-5 { padding: 20px; }
+	.mt-1 { margin-top: 4px; }
+	.mt-3 { margin-top: 12px; }
+	.mt-auto { margin-top: auto; }
+	.pt-4 { padding-top: 16px; }
+	.h-4 { height: 16px; }
+	.w-4 { width: 16px; }
+	.h-full { height: 100%; }
+	.z-0 { z-index: 0; }
+	.z-10 { z-index: 10; }
+	.left-9 { left: 36px; }
+	.bottom-0 { bottom: 0; }
+	.translate-y-1\/2 { transform: translateY(50%); }
+	.rotate-45 { transform: rotate(45deg); }
+	.leading-tight { line-height: 1.2; }
+	.leading-snug { line-height: 1.35; }
+	.max-w-3xl { max-width: 48rem; }
+	.border-r-2 { border-right-width: 2px; }
+	.border-b-2 { border-bottom-width: 2px; }
+	.cursor-pointer { cursor: pointer; }
+	a.inline-flex { text-decoration: none; }
+
+	/* the diagonal speech-bubble tail: rotate + translate combined */
+	.bubble_tail { transform: translateY(50%) rotate(45deg); }
+
+	/* page chrome, not part of the design system, just for the guide itself */
+	header.hero { padding: 60px 24px 46px; text-align: center; background: var(--surface-alt); border-bottom: 1px solid #e4d7bd; }
+	header.hero h1 { font-family: 'Baloo 2', sans-serif; font-size: 2.1rem; margin: 0 0 10px; color: var(--ink); }
+	header.hero p { color: var(--ink-muted); max-width: 480px; margin: 0 auto; }
+	section.guide { padding: 50px 24px; max-width: 900px; margin: 0 auto; border-bottom: 1px solid #eee; }
+	section.guide h2 { font-family: 'Baloo 2', sans-serif; font-size: 1.3rem; margin: 0 0 20px; }
+	.swatch_row { display: flex; flex-wrap: wrap; gap: 14px; }
+	.swatch { width: 130px; text-align: center; font-size: 0.75rem; color: #777; }
+	.swatch_color { height: 64px; border-radius: 6px; border: 1px solid #ccc; margin-bottom: 6px; }
+	.blank_box { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: repeating-linear-gradient(45deg, #eee, #eee 6px, #f7f7f7 6px, #f7f7f7 12px); color: #aaa; font-size: 0.75rem; border-radius: 4px; }
+	.asset_slot { width: 160px; height: 100px; border: 1px dashed #ccc; border-radius: 6px; }
+	.type_row { margin-bottom: 16px; }
+	.type_label { font-size: 0.72rem; color: #999; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+	pre { background: var(--surface-alt); border: 1px solid #e4d7bd; border-radius: 6px; padding: 16px; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; overflow: auto; color: var(--ink); }
+	footer.page_footer { text-align: center; padding: 40px 24px; color: #999; font-size: 0.85rem; }
+</style>
+</head>
+<body>
+
+<header class="hero">
+	<h1>Boba Bash branding guide</h1>
+	<p>Colors, type, and the three core components pulled straight from the live app, for anyone building a new page or a city variant.</p>
+</header>
+
+<section class="guide">
+	<h2>Logo & cup icon (right click and "save image as...")</h2>
+	<div class="flex gap-4 flex-wrap">
+		<img src="pics/cup.png"/>
+		
+		<img src="pics/logos/logofull.png"/>
+		<img src="pics/logos/logowordmark.png"/>
+		<img src="pics/logos/logodetail.png"/>
+		
+	</div>
+</section>
+
+<section class="guide">
+	<h2>Colors</h2>
+	<div class="swatch_row">
+		<div class="swatch"><div class="swatch_color" style="background:#a9d8ee"></div>bubble</div>
+		<div class="swatch"><div class="swatch_color" style="background:#274156"></div>bubble-ink</div>
+		<div class="swatch"><div class="swatch_color" style="background:#fbf6e8"></div>surface</div>
+		<div class="swatch"><div class="swatch_color" style="background:#f0e9d8"></div>surface-alt</div>
+		<div class="swatch"><div class="swatch_color" style="background:#3d2b18"></div>ink / line</div>
+		<div class="swatch"><div class="swatch_color" style="background:#6b5842"></div>ink-muted</div>
+		<div class="swatch"><div class="swatch_color" style="background:#9a8064"></div>ink-soft</div>
+		<div class="swatch"><div class="swatch_color" style="background:#f2c14e"></div>goldenrod</div>
+		<div class="swatch"><div class="swatch_color" style="background:linear-gradient(180deg,#c0dfc6 0%,#85c5da 44%,#6fbbe2 81%,#b6dbc9 100%)"></div>apply gradient</div>
+	</div>
+</section>
+
+<section class="guide">
+	<h2>Type</h2>
+	<div class="type_row"><div class="type_label">font-display, Baloo 2, used for all headings</div><div class="font-display font-bold" style="font-size:1.9rem;">Aa Boba Bash</div></div>
+	<div class="type_row"><div class="type_label">text-title</div><div class="font-display text-title font-bold">Events</div></div>
+	<div class="type_row"><div class="type_label">text-heading</div><div class="font-display text-heading font-bold">Boba Bash CITY HERE</div></div>
+	<div class="type_row"><div class="type_label">text-subheading</div><div class="text-subheading text-ink-muted">Run a Boba Bash in your city.</div></div>
+	<div class="type_row"><div class="type_label">text-body, Poppins, used for everything else</div><div class="text-body">DAY OF THE WEEK, MONTH DAY</div></div>
+	<div class="type_row"><div class="type_label">text-caption</div><div class="text-caption text-ink-soft">by YOU!</div></div>
+</section>
+
+<section class="guide">
+	<h2>Bubble</h2>
+	<div class="relative inline-block">
+		<div aria-hidden="true" class="border-bubble-ink bg-bubble absolute bottom-0 left-9 z-0 h-4 w-4 bubble_tail border-r-2 border-b-2"></div>
+		<div class="border-bubble-ink bg-bubble relative z-10 inline-flex items-center gap-3 rounded-full border-2 px-6 py-2.5">
+			<h1 class="font-display text-heading text-bubble-ink font-bold">HERE IS A WORD</h1>
+		</div>
+	</div>
+</section>
+
+<section class="guide">
+	<h2>Card</h2>
+	<div style="max-width:280px;">
+		<div class="border-line bg-surface shadow-card flex h-full flex-col border-2">
+			<div class="flex flex-1 flex-col p-5">
+				<div class="flex items-start justify-between gap-3">
+					<h2 class="font-display text-heading text-ink leading-tight font-bold">Boba Bash CITY HERE</h2>
+				</div>
+				<p class="text-body text-ink-muted mt-1">CITY, STATE, COUNTRY</p>
+				<p class="text-body text-ink mt-3 font-bold">DAY OF THE WEEK, MONTH DAY</p>
+				<div class="mt-auto flex flex-wrap items-center gap-2 pt-4">
+					<span class="border-line font-display text-caption inline-flex items-center gap-1.5 rounded-full border px-3 py-0.5 font-bold bg-surface-alt text-ink">100000 going</span>
+					<span class="text-caption text-ink-soft">by YOU!</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="guide">
+	<h2>Page header (bubble + buttons + subhead)</h2>
+	<div class="flex flex-col gap-4">
+		<div class="flex flex-wrap items-center justify-between gap-4">
+			<div class="relative inline-block">
+				<div aria-hidden="true" class="border-bubble-ink bg-bubble absolute bottom-0 left-9 z-0 h-4 w-4 bubble_tail border-r-2 border-b-2"></div>
+				<div class="border-bubble-ink bg-bubble relative z-10 inline-flex items-center gap-3 rounded-full border-2 px-6 py-2.5">
+					<h1 class="font-display text-heading text-bubble-ink font-bold">Organize</h1>
+				</div>
+			</div>
+			<div class="flex flex-wrap gap-3">
+				<a class="inline-flex cursor-pointer items-center justify-center gap-2 border-2 border-line font-display font-bold shadow-control bg-surface text-ink px-5 py-2.5 text-body" href="#">Read the handbook</a>
+				<a class="inline-flex cursor-pointer items-center justify-center gap-2 border-2 border-line font-display font-bold shadow-control text-ink-muted px-5 py-2.5 text-body" style="background:linear-gradient(180deg,#c0dfc6 0%,#85c5da 44%,#6fbbe2 81%,#b6dbc9 100%);" href="#">Apply to organize</a>
+			</div>
+		</div>
+		<div class="text-subheading text-ink-muted max-w-3xl leading-snug">Run a Boba Bash in your city. Apply once, and when it's approved you'll get a page people can RSVP to.</div>
+	</div>
+</section>
+
+<section class="guide" style="border-bottom:none;">
+	<h2>Tokens</h2>
+	<pre>{
+  "colors": {
+    "bubble": "#a9d8ee",
+    "bubble_ink": "#274156",
+    "surface": "#fbf6e8",
+    "surface_alt": "#f0e9d8",
+    "ink": "#3d2b18",
+    "ink_muted": "#6b5842",
+    "ink_soft": "#9a8064",
+    "line": "#3d2b18",
+    "goldenrod": "#f2c14e",
+    "apply_gradient": "linear-gradient(180deg,#c0dfc6 0%,#85c5da 44%,#6fbbe2 81%,#b6dbc9 100%)"
+  },
+  "fonts": {
+    "display": "'Baloo 2', sans-serif",
+    "body": "'Poppins', sans-serif"
+  }
+}</pre>
+</section>
+
+<footer class="page_footer">boba bash branding guide, built from the live component classes</footer>
+
+</body>
+</html>
