@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Sparkles, Video, MapPin } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,6 @@ export default async function HomePage({
   const query = workshopQuerySchema.parse({
     q: typeof params.q === "string" ? params.q : undefined,
     when: typeof params.when === "string" ? params.when : undefined,
-    format: typeof params.format === "string" ? params.format : undefined,
     org: typeof params.org === "string" ? params.org : undefined,
     sort: typeof params.sort === "string" ? params.sort : undefined,
   });
@@ -50,8 +49,8 @@ export default async function HomePage({
               Learn something new at <span className="text-bubble-ink">Boba Bash</span> 🧋
             </h1>
             <p className="max-w-2xl text-lg text-ink-muted">
-              Hands-on workshops and community events. Browse below, pick one, enter your email —
-              that&apos;s it. No account needed.
+              Live online workshops and community events. Pick one, enter your email — your private
+              access link appears right away. No account needed.
             </p>
             <div className="flex flex-wrap gap-3">
               <Button size="lg" asChild>
@@ -60,7 +59,7 @@ export default async function HomePage({
                 </Link>
               </Button>
               <Button size="lg" variant="gradient" asChild>
-                <Link href="/find-my-workshops">Find my registered workshops</Link>
+                <Link href="/boba-bash-lahore">Boba Bash Lahore workshops</Link>
               </Button>
             </div>
           </div>
@@ -160,8 +159,6 @@ export default async function HomePage({
                     description: w.description,
                     startsAt: w.startsAt,
                     endsAt: w.endsAt,
-                    format: w.format,
-                    location: w.location,
                     status: w.status,
                     organizationName: w.organization.name,
                     organizationSlug: w.organization.slug,

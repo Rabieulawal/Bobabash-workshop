@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CalendarDays, Clock, MapPin, Video, ExternalLink, MailWarning } from "lucide-react";
+import { CalendarDays, Clock, Video, ExternalLink, CircleAlert } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Button } from "@/components/ui/button";
@@ -31,14 +31,15 @@ export default async function AttendeePage({
           <section className="container py-16">
             <div className="brand-card mx-auto max-w-lg rounded-xl p-8 text-center">
               <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border-2 border-line bg-goldenrod/40">
-                <MailWarning className="h-7 w-7 text-ink" aria-hidden="true" />
+                <CircleAlert className="h-7 w-7 text-ink" aria-hidden="true" />
               </div>
               <h1 className="mt-4 font-display text-2xl font-bold text-ink">Link not valid</h1>
               <p className="mt-2 text-ink-muted">
-                This link has expired or doesn&apos;t exist. Request a fresh link below and we&apos;ll email it to you.
+                This access link has expired or doesn&apos;t exist. Open the workshop page and register again —
+                you&apos;ll get a fresh link instantly.
               </p>
               <Button className="mt-5" asChild>
-                <Link href="/find-my-workshops">Email me a new link</Link>
+                <Link href="/workshops">Browse workshops</Link>
               </Button>
             </div>
           </section>
@@ -92,19 +93,11 @@ export default async function AttendeePage({
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  {workshop.format === "ONLINE" ? (
-                    <Video className="mt-0.5 h-5 w-5 text-bubble-ink" aria-hidden="true" />
-                  ) : (
-                    <MapPin className="mt-0.5 h-5 w-5 text-bubble-ink" aria-hidden="true" />
-                  )}
+                  <Video className="mt-0.5 h-5 w-5 text-bubble-ink" aria-hidden="true" />
                   <div>
-                    <p className="font-display font-bold text-ink">{workshop.format === "ONLINE" ? "Online" : "In person"}</p>
+                    <p className="font-display font-bold text-ink">Online workshop</p>
                     <p className="text-sm text-ink-muted">
-                      {workshop.format === "ONLINE"
-                        ? workshop.meetingUrl
-                          ? "Meeting link ready"
-                          : "Meeting link: coming soon"
-                        : workshop.location ?? "Location TBA"}
+                      {workshop.meetingUrl ? "Meeting link ready" : "Meeting link: coming soon"}
                     </p>
                   </div>
                 </div>

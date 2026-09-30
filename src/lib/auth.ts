@@ -8,6 +8,9 @@ import type { SessionTarget, Organizer, Role } from "@prisma/client";
  * Authentication: organizer sessions (username+password) and
  * passwordless attendee tokens. Session tokens are random 32-byte
  * strings; only SHA-256 hashes are stored in the database.
+ *
+ * Attendee access is browser-delivered: the token is minted during
+ * registration and shown to the attendee immediately (no email).
  */
 
 const ORGANIZER_COOKIE = "bb_session";
@@ -110,11 +113,6 @@ export async function createAttendeeToken(registrationId: string, days = ATTENDE
   return token;
 }
 
-/** One-time rotation guard: token can be re-issued on demand, always hashed at rest. */
-export async function rotateAttendeeToken(registrationId: string): Promise<string> {
-  return createAttendeeToken(registrationId, ATTENDEE_SESSION_DAYS);
-}
-
 export type AttendeeAccess = {
   email: string;
   workshop: {
@@ -124,8 +122,6 @@ export type AttendeeAccess = {
     description: string;
     startsAt: Date;
     endsAt: Date;
-    format: "ONLINE" | "IN_PERSON";
-    location: string | null;
     meetingUrl: string | null;
     status: string;
     organizationName: string;
@@ -164,23 +160,12 @@ export async function getAttendeeAccess(token: string): Promise<AttendeeAccess |
       description: w.description,
       startsAt: w.startsAt,
       endsAt: w.endsAt,
-      format: w.format,
-      location: w.location,
       meetingUrl: w.meetingUrl,
       status: w.status,
       organizationName: w.organization.name,
       organizationSlug: w.organization.slug,
     },
   };
-}
-
-/** Find the newest valid token-holding registration for an email (used by "resend access" flow). */
-export async function findActiveRegistrationsByEmail(email: string) {
-  return prisma.registration.findMany({
-    where: { attendeeEmail: email.toLowerCase().trim(), status: "CONFIRMED", tokenExpiresAt: { gt: new Date() } },
-    include: { workshop: { include: { organization: { select: { name: true } } } } },
-    orderBy: { createdAt: "desc" },
-  });
 }
 
 /* ── Permissions ────────────────────────────────────────── */

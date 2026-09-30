@@ -22,7 +22,7 @@ export default async function OtherEventsPage({
 }) {
   const params = await searchParams;
   const pick = (k: string) => (typeof params[k] === "string" ? params[k] : undefined);
-  const query = workshopQuerySchema.parse({ ...{ org: "other-events" }, q: pick("q"), when: pick("when"), format: pick("format"), sort: pick("sort") });
+  const query = workshopQuerySchema.parse({ ...{ org: "other-events" }, q: pick("q"), when: pick("when"), sort: pick("sort") });
 
   const [{ workshops }, orgs] = await Promise.all([listWorkshops(query), listOrganizationsPublic()]);
   if (!orgs.some((o) => !o.isFeatured)) notFound();
@@ -64,7 +64,7 @@ export default async function OtherEventsPage({
                   key={w.id}
                   workshop={{
                     slug: w.slug, title: w.title, description: w.description,
-                    startsAt: w.startsAt, endsAt: w.endsAt, format: w.format, location: w.location,
+                    startsAt: w.startsAt, endsAt: w.endsAt,
                     status: w.status, organizationName: w.organization.name, organizationSlug: w.organization.slug,
                     organizerName: w.organizer.name, attendeeCount: w._count.registrations, capacity: w.capacity,
                     coverImageUrl: w.coverImageUrl,

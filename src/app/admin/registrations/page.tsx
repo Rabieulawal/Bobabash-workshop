@@ -5,6 +5,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { StatCard } from "@/components/admin/stat-card";
 import { requirePageOrganizer } from "@/lib/page-guards";
 import { prisma } from "@/lib/db";
+import { PERMISSIONS } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Registrations", robots: { index: false } };
@@ -14,7 +15,9 @@ export default async function RegistrationsPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const me = await requirePageOrganizer("attendees:view-own");
+  // Platform-wide list — Super Admin scope only (organizers see their own
+  // attendees per workshop at /admin/workshops/[id]/attendees).
+  const me = await requirePageOrganizer(PERMISSIONS.REGISTRATIONS_MANAGE_ALL);
   const sp = await searchParams;
   const email = typeof sp.email === "string" ? sp.email.toLowerCase().trim() : "";
 

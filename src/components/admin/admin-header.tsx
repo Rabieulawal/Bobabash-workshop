@@ -10,7 +10,7 @@ export function AdminHeader({ organizer }: { organizer: SessionOrganizer }) {
   const navItems = [
     { href: "/admin", label: "Dashboard", icon: LayoutDashboard, show: true },
     { href: "/admin/workshops", label: "Workshops", icon: CalendarDays, show: true },
-    { href: "/admin/registrations", label: "Registrations", icon: Users, show: isSuper || hasPermission(organizer, PERMISSIONS.ATTENDEES_VIEW_OWN) },
+    { href: "/admin/registrations", label: "Registrations", icon: Users, show: isSuper || hasPermission(organizer, PERMISSIONS.REGISTRATIONS_MANAGE_ALL) },
     { href: "/admin/organizers", label: "Organizers", icon: ShieldCheck, show: isSuper || hasPermission(organizer, PERMISSIONS.ORGANIZERS_MANAGE) },
     { href: "/admin/organizations", label: "Organizations", icon: Building2, show: isSuper || hasPermission(organizer, PERMISSIONS.ORGANIZATIONS_MANAGE) },
     { href: "/admin/settings", label: "Settings", icon: Settings, show: isSuper },

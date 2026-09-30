@@ -63,8 +63,6 @@ export default async function EditWorkshopPage({
               date: start.date,
               startTime: start.time,
               endTime: end.time,
-              format: workshop.format,
-              location: workshop.location,
               capacity: workshop.capacity,
               meetingUrl: workshop.meetingUrl,
               coverImageUrl: workshop.coverImageUrl,

@@ -29,8 +29,6 @@ export default async function SettingsPage() {
     }),
   ]);
 
-  const emailConfigured = Boolean(process.env.RESEND_API_KEY);
-
   return (
     <>
       <AdminHeader organizer={me} />
@@ -56,14 +54,9 @@ export default async function SettingsPage() {
 
           <h2 className="mt-10 font-display text-xl font-bold text-ink">System status</h2>
           <div className="mt-4 flex flex-col gap-3">
-            <Alert variant={emailConfigured ? "success" : "warning"}>
-              {emailConfigured
-                ? "Email is configured (Resend). Transactional emails are being sent."
-                : "Email is NOT configured. Set RESEND_API_KEY + EMAIL_FROM — until then emails are logged to the server console instead of sent."}
-            </Alert>
             <Alert variant="info">
-              Reminder cron: add a Vercel Cron hitting <span className="font-mono">/api/cron/send-reminders</span> daily with the
-              CRON_SECRET header (see vercel.json — included automatically on Vercel).
+              The platform sends no emails: attendees get their private access link in the browser immediately after
+              registering. All workshops are online.
             </Alert>
             <div className="brand-card flex flex-wrap items-center gap-2 rounded-xl p-4">
               <span className="text-sm font-medium text-ink-muted">Database:</span>

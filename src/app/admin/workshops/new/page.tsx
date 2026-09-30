@@ -30,7 +30,7 @@ export default async function NewWorkshopPage() {
           </div>
           <WorkshopForm
             action={createWorkshopAction}
-            values={{ status: "DRAFT", format: "IN_PERSON" }}
+            values={{ status: "DRAFT" }}
             organizations={orgs}
             submitLabel="Create workshop"
             isSuperAdmin={organizer.role === "SUPER_ADMIN"}

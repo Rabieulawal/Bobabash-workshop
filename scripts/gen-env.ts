@@ -1,33 +1,27 @@
 /**
- * Dev-only helper: generates .env with random AUTH_SECRET and CRON_SECRET.
- * Usage: bun run scripts/gen-env.ts
+ * Dev-only helper: writes a starter .env for local development.
+ * Usage: bun run scripts/gen-env.ts  (or: npm run gen:env)
+ *
+ * The app needs no secrets beyond the database URL: sessions and attendee
+ * tokens are random values stored only as SHA-256 hashes, there is no email
+ * provider and no file storage. See .env.example for the full list.
  */
 import { writeFileSync, existsSync, readFileSync } from "fs";
 
-const authSecret = Buffer.from(crypto.getRandomValues(new Uint8Array(48))).toString("base64");
-const cronSecret = Buffer.from(crypto.getRandomValues(new Uint8Array(24))).toString("hex");
-
-const env = `DATABASE_URL="postgresql://postgres:postgres@localhost:5432/boba_workshops?schema=public"
-AUTH_SECRET="${authSecret}"
-CRON_SECRET="${cronSecret}"
-RESEND_API_KEY=""
-EMAIL_FROM="Boba Bash Workshops <onboarding@resend.dev>"
-NEXT_PUBLIC_APP_URL="http://localhost:3000"
-ALLOW_PRODUCTION_SEED="false"
-`;
+const lines = [
+  `DATABASE_URL="postgresql://postgres:postgres@localhost:5432/boba_workshops?schema=public"`,
+  `NEXT_PUBLIC_APP_URL="http://localhost:3000"`,
+];
 
 if (!existsSync(".env")) {
-  writeFileSync(".env", env);
-  console.log("Created .env with generated secrets.");
+  writeFileSync(".env", lines.join("\n") + "\n");
+  console.log("Created .env — edit DATABASE_URL if your Postgres differs.");
 } else {
   const existing = readFileSync(".env", "utf-8");
-  const missing = [
-    ["AUTH_SECRET", authSecret],
-    ["CRON_SECRET", cronSecret],
-  ].filter(([k]) => !existing.includes(k));
+  const missing = lines.map((l) => l.split("=")[0]).filter((key) => !existing.includes(key));
   if (missing.length) {
-    writeFileSync(".env", existing.trimEnd() + "\n" + missing.map(([k, v]) => `${k}="${v}"`).join("\n") + "\n");
-    console.log("Appended missing keys to .env:", missing.map(([k]) => k).join(", "));
+    writeFileSync(".env", existing.trimEnd() + "\n" + lines.filter((l) => missing.includes(l.split("=")[0])).join("\n") + "\n");
+    console.log("Appended missing keys to .env:", missing.join(", "));
   } else {
     console.log(".env already exists and is complete.");
   }

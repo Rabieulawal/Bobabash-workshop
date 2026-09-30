@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CalendarDays, Clock, MapPin, Video, Users, ArrowLeft, ExternalLink, Lock, CircleCheck } from "lucide-react";
+import { CalendarDays, Clock, Video, Users, ArrowLeft, ExternalLink, Lock, CircleCheck } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Badge } from "@/components/ui/badge";
@@ -55,16 +55,10 @@ export default async function WorkshopDetailPage({
     description: workshop.description,
     startDate: workshop.startsAt.toISOString(),
     endDate: workshop.endsAt.toISOString(),
-    eventAttendanceMode:
-      workshop.format === "ONLINE"
-        ? "https://schema.org/OnlineEventAttendanceMode"
-        : "https://schema.org/OfflineEventAttendanceMode",
+    eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
     eventStatus:
       workshop.status === "CANCELLED" ? "https://schema.org/EventCancelled" : "https://schema.org/EventScheduled",
-    location:
-      workshop.format === "ONLINE"
-        ? { "@type": "VirtualLocation", url: workshop.meetingUrl ?? undefined }
-        : { "@type": "Place", name: workshop.location ?? "To be announced", address: workshop.location ?? "" },
+    location: { "@type": "VirtualLocation", url: workshop.meetingUrl ?? undefined },
     organizer: { "@type": "Organization", name: workshop.organization.name },
     maximumAttendeeCapacity: workshop.capacity ?? undefined,
   };
@@ -124,21 +118,11 @@ export default async function WorkshopDetailPage({
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  {workshop.format === "ONLINE" ? (
-                    <Video className="mt-0.5 h-5 w-5 text-bubble-ink" aria-hidden="true" />
-                  ) : (
-                    <MapPin className="mt-0.5 h-5 w-5 text-bubble-ink" aria-hidden="true" />
-                  )}
+                  <Video className="mt-0.5 h-5 w-5 text-bubble-ink" aria-hidden="true" />
                   <div>
-                    <p className="font-display font-bold text-ink">
-                      {workshop.format === "ONLINE" ? "Online" : "In person"}
-                    </p>
+                    <p className="font-display font-bold text-ink">Online workshop</p>
                     <p className="text-sm text-ink-muted">
-                      {workshop.format === "ONLINE"
-                        ? workshop.meetingUrl
-                          ? "Meeting link available"
-                          : "Meeting link: coming soon"
-                        : workshop.location ?? "Location to be announced"}
+                      {workshop.meetingUrl ? "Meeting link available" : "Meeting link: coming soon"}
                     </p>
                   </div>
                 </div>
@@ -191,7 +175,7 @@ export default async function WorkshopDetailPage({
                   <>
                     <h2 className="font-display text-xl font-bold text-ink">Join this workshop</h2>
                     <p className="mt-1 text-sm text-ink-muted">
-                      Enter your email — no account, no password, no fuss.
+                      Enter your email — no account, no password. Your private access link appears instantly.
                     </p>
                     <div className="mt-4">
                       <RegisterForm slug={workshop.slug} registrationOpen={open} />
@@ -203,6 +187,18 @@ export default async function WorkshopDetailPage({
                     <p className="mt-2 text-sm text-ink-muted">
                       All {workshop.capacity} spots are taken. Check out similar workshops below.
                     </p>
+                    <div className="mt-5 border-t-2 border-dashed border-line/30 pt-4 text-left">
+                      <p className="font-display font-bold text-ink">Already registered?</p>
+                      <p className="mt-1 text-sm text-ink-muted">
+                        You can still get back to your spot with your access link.
+                      </p>
+                      <div className="mt-3">
+                        <RegisterForm slug={workshop.slug} registrationOpen={false} variant="recover" />
+                      </div>
+                    </div>
+                    <Button className="mt-4 w-full" variant="outline" asChild>
+                      <Link href="/workshops">Browse workshops</Link>
+                    </Button>
                   </div>
                 ) : (
                   <div className="text-center">
@@ -212,6 +208,12 @@ export default async function WorkshopDetailPage({
                     <p className="mt-2 text-sm text-ink-muted">
                       New registrations are closed for this workshop.
                     </p>
+                    <div className="mt-5 border-t-2 border-dashed border-line/30 pt-4 text-left">
+                      <p className="font-display font-bold text-ink">Already registered?</p>
+                      <div className="mt-3">
+                        <RegisterForm slug={workshop.slug} registrationOpen={false} variant="recover" />
+                      </div>
+                    </div>
                     <Button className="mt-4 w-full" variant="outline" asChild>
                       <Link href="/workshops">Browse workshops</Link>
                     </Button>
@@ -259,8 +261,6 @@ export default async function WorkshopDetailPage({
                       description: w.description,
                       startsAt: w.startsAt,
                       endsAt: w.endsAt,
-                      format: w.format,
-                      location: w.location,
                       status: w.status,
                       organizationName: w.organization.name,
                       organizationSlug: w.organization.slug,

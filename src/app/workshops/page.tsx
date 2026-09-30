@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "All Workshops",
-  description: "Browse every upcoming community workshop — online and in person.",
+  description: "Browse every upcoming community workshop — all online, all free to join.",
 };
 
 export default async function WorkshopsPage({
@@ -23,7 +23,6 @@ export default async function WorkshopsPage({
   const query = workshopQuerySchema.parse({
     q: pick("q"),
     when: pick("when"),
-    format: pick("format"),
     org: pick("org"),
     sort: pick("sort"),
   });
@@ -43,7 +42,8 @@ export default async function WorkshopsPage({
               </div>
             </div>
             <p className="mt-4 max-w-2xl text-ink-muted">
-              Every upcoming workshop across Boba Bash Lahore and partner events. Search, filter, and register with just your email.
+              Every upcoming workshop across Boba Bash Lahore and partner events — all online. Search, filter, and
+              register with just your email; your private access link appears instantly.
             </p>
           </div>
         </section>
@@ -73,8 +73,6 @@ export default async function WorkshopsPage({
                     description: w.description,
                     startsAt: w.startsAt,
                     endsAt: w.endsAt,
-                    format: w.format,
-                    location: w.location,
                     status: w.status,
                     organizationName: w.organization.name,
                     organizationSlug: w.organization.slug,

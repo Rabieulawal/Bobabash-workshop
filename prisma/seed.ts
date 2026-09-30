@@ -12,7 +12,7 @@
  * your env after seeding; organizer passwords can then be rotated by each
  * user at /admin/account or by an admin via "Reset password".
  */
-import { PrismaClient, WorkshopFormat, WorkshopStatus } from "@prisma/client";
+import { PrismaClient, WorkshopStatus } from "@prisma/client";
 import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
@@ -122,9 +122,10 @@ async function main() {
   });
 
   // Workshops ──────────────────────────────────────────────
+  // All workshops are online — a meeting link is optional and can be added later.
   type W = {
     slug: string; title: string; description: string; startsAt: Date; endsAt: Date;
-    format: WorkshopFormat; location?: string; meetingUrl?: string; capacity?: number;
+    meetingUrl?: string; capacity?: number;
     status: WorkshopStatus; orgId: string; organizerId: string;
   };
 
@@ -133,18 +134,18 @@ async function main() {
       slug: "boba-brewing-101",
       title: "Boba Brewing 101",
       description:
-        "Learn the art of bubble tea from scratch! We'll cover tea selection, brewing times, tapioca pearl preparation, and classic recipes.\n\nAll ingredients provided — just bring yourself and a love of boba.",
+        "Learn the art of bubble tea from scratch! We'll cover tea selection, brewing times, tapioca pearl preparation, and classic recipes.\n\nJoin live from your kitchen and brew along — no experience needed.",
       startsAt: at(2, 17), endsAt: at(2, 19),
-      format: "IN_PERSON", location: "Boba Bash HQ, Gulberg III, Lahore",
+      meetingUrl: "https://meet.google.com/bobabash-brewing",
       capacity: 24, status: "PUBLISHED", orgId: bobaBash.id, organizerId: fatima.id,
     },
     {
       slug: "latte-art-for-beginners",
       title: "Latte Art for Beginners",
       description:
-        "From milk steaming basics to your first heart and rosetta. A hands-on evening with our favorite baristas.\n\nLimited spots — register early!",
+        "From milk steaming basics to your first heart and rosetta, with live demos from our favourite baristas.\n\nLimited spots — register early!",
       startsAt: at(5, 18), endsAt: at(5, 20),
-      format: "IN_PERSON", location: "Cafe Creme, MM Alam Road, Lahore",
+      meetingUrl: "https://zoom.us/j/bobabash-latte-art",
       capacity: 16, status: "PUBLISHED", orgId: bobaBash.id, organizerId: fatima.id,
     },
     {
@@ -153,7 +154,7 @@ async function main() {
       description:
         "A relaxed online hangout to meet the people behind Boba Bash Lahore, hear what's coming next, and share your workshop ideas.",
       startsAt: at(7, 20), endsAt: at(7, 21),
-      format: "ONLINE", meetingUrl: "https://meet.google.com/bobabash-demo",
+      meetingUrl: "https://meet.google.com/bobabash-demo",
       status: "PUBLISHED", orgId: bobaBash.id, organizerId: fatima.id,
     },
     {
@@ -162,7 +163,7 @@ async function main() {
       description:
         "A fast-paced, beginner-friendly tour of modern web development. Build and deploy your first interactive app by the end of the session.\n\nPrerequisites: curiosity. That's it.",
       startsAt: at(3, 16), endsAt: at(3, 18, 30),
-      format: "ONLINE", meetingUrl: "https://zoom.us/j/lcc-demo",
+      meetingUrl: "https://zoom.us/j/lcc-demo",
       capacity: 60, status: "PUBLISHED", orgId: lcc.id, organizerId: bilal.id,
     },
     {
@@ -171,7 +172,7 @@ async function main() {
       description:
         "Branching, merging, pull requests and good commit hygiene — everything you need to contribute to open source with confidence.",
       startsAt: at(10, 17), endsAt: at(10, 19),
-      format: "IN_PERSON", location: "LUMS Computer Lab 3, Lahore",
+      meetingUrl: "https://zoom.us/j/lcc-git-hands-on",
       capacity: 30, status: "PUBLISHED", orgId: lcc.id, organizerId: bilal.id,
     },
     {
@@ -180,8 +181,6 @@ async function main() {
       description:
         "What actually happens inside a large language model? Then: build a tiny AI-powered app live with an API. Bring a laptop!",
       startsAt: at(6, 19), endsAt: at(6, 21),
-      format: "ONLINE",
-      location: undefined,
       meetingUrl: undefined, // "coming soon" demo
       capacity: 100, status: "PUBLISHED", orgId: aim.id, organizerId: ayesha.id,
     },
@@ -191,15 +190,15 @@ async function main() {
       description:
         "Bring your gnarliest prompts. We'll debug them together and learn patterns that make model outputs reliable.",
       startsAt: at(14, 18), endsAt: at(14, 19, 30),
-      format: "ONLINE", meetingUrl: "https://teams.microsoft.com/l/meetup-join/aim-demo",
+      meetingUrl: "https://teams.microsoft.com/l/meetup-join/aim-demo",
       capacity: 40, status: "PUBLISHED", orgId: aim.id, organizerId: ayesha.id,
     },
     {
       slug: "boba-tasting-night",
       title: "Boba Tasting Night (Fully Booked)",
-      description: "A guided tasting of eight signature drinks. This one filled up fast — join the next one!",
+      description: "A guided tasting of eight signature drinks over a live video session. This one filled up fast — join the next one!",
       startsAt: at(1, 19), endsAt: at(1, 21),
-      format: "IN_PERSON", location: "Boba Bash HQ, Gulberg III, Lahore",
+      meetingUrl: "https://meet.google.com/bobabash-tasting",
       capacity: 20, status: "FULLY_BOOKED", orgId: bobaBash.id, organizerId: fatima.id,
     },
     {
@@ -207,7 +206,6 @@ async function main() {
       title: "Mystery Workshop (Coming Soon)",
       description: "We can't announce it yet… but it involves tapioca and a very large pot. Keep an eye on this page.",
       startsAt: at(21, 17), endsAt: at(21, 19),
-      format: "IN_PERSON", location: "TBA, Lahore",
       status: "DRAFT", orgId: bobaBash.id, organizerId: fatima.id,
     },
   ];
@@ -223,8 +221,6 @@ async function main() {
         description: w.description,
         startsAt: w.startsAt,
         endsAt: w.endsAt,
-        format: w.format,
-        location: w.location,
         meetingUrl: w.meetingUrl,
         capacity: w.capacity,
         status: w.status,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import {
   Link2, CalendarClock, PauseCircle, PlayCircle, Ban, Loader2,
@@ -8,7 +8,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { ActionFeedback } from "@/components/ui/toast";
 import type { ActionState } from "@/lib/action-utils";
 import {
@@ -16,6 +15,7 @@ import {
   rescheduleWorkshopAction,
   setWorkshopStatusAction,
   toggleRegistrationAction,
+  deleteWorkshopAction,
 } from "@/app/admin/actions/workshop-actions";
 
 function PanelSubmit({ children, variant = "default" }: { children: React.ReactNode; variant?: "default" | "destructive" | "outline" }) {
@@ -38,13 +38,11 @@ function Panel({ title, children }: { title: string; children: React.ReactNode }
 
 export function MeetingLinkPanel({ id, meetingUrl }: { id: string; meetingUrl: string | null }) {
   const [state, formAction] = useActionState(setMeetingLinkAction, null);
-  const [notify, setNotify] = useState(true);
 
   return (
     <Panel title="Meeting link">
       <form action={formAction} className="flex flex-col gap-3">
         <input type="hidden" name="id" value={id} />
-        <input type="hidden" name="notify" value={notify ? "on" : ""} />
         <div>
           <Label htmlFor="meetingUrl-panel">Meeting URL (https only)</Label>
           <Input
@@ -54,11 +52,11 @@ export function MeetingLinkPanel({ id, meetingUrl }: { id: string; meetingUrl: s
             placeholder="https://meet.google.com/abc-defg-hij"
             defaultValue={meetingUrl ?? ""}
           />
+          <p className="mt-1 text-xs text-ink-soft">
+            Google Meet, Zoom, Teams, Discord or any https:// link. Attendees see a <span className="font-semibold">Join Workshop</span> button as
+            soon as it&apos;s saved. Clear the field to remove the link.
+          </p>
         </div>
-        <label className="flex items-center gap-2.5 text-sm text-ink-muted">
-          <Switch checked={notify} onCheckedChange={setNotify} aria-label="Notify attendees by email" />
-          Email attendees when the link is added
-        </label>
         <div className="flex items-center gap-2">
           <PanelSubmit>
             <Link2 className="h-4 w-4" /> Save link
@@ -76,13 +74,11 @@ export function ReschedulePanel({
   id: string; date: string; startTime: string; endTime: string;
 }) {
   const [state, formAction] = useActionState(rescheduleWorkshopAction, null);
-  const [notify, setNotify] = useState(true);
 
   return (
     <Panel title="Reschedule">
       <form action={formAction} className="flex flex-col gap-3">
         <input type="hidden" name="id" value={id} />
-        <input type="hidden" name="notify" value={notify ? "on" : ""} />
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <div>
             <Label htmlFor="resch-date">New date</Label>
@@ -97,10 +93,9 @@ export function ReschedulePanel({
             <Input id="resch-end" name="endTime" type="time" defaultValue={endTime} required />
           </div>
         </div>
-        <label className="flex items-center gap-2.5 text-sm text-ink-muted">
-          <Switch checked={notify} onCheckedChange={setNotify} aria-label="Notify attendees by email" />
-          Email attendees about the new time
-        </label>
+        <p className="text-xs text-ink-soft">
+          The new time appears immediately on the public page and on every attendee&apos;s access link.
+        </p>
         <div>
           <PanelSubmit>
             <CalendarClock className="h-4 w-4" /> Reschedule
@@ -145,12 +140,13 @@ export function StatusActions({
   canDelete: boolean;
 }) {
   const [cancelState, cancelAction] = useActionState(setWorkshopStatusAction, null);
-  const [deleteState, deleteAction] = useActionState(setWorkshopStatusAction, null);
+  const [deleteState, deleteAction] = useActionState(deleteWorkshopAction, null);
 
   return (
     <Panel title="Cancel workshop">
       <p className="mb-3 text-sm text-ink-muted">
-        Cancelling keeps all registrations on record and emails every attendee (when email is configured). This cannot be undone by attendees — only you or an admin can restore the status.
+        Cancelling keeps all registrations on record and blocks new sign-ups. This cannot be undone by attendees — only you or an admin can
+        restore the status.
       </p>
       {current !== "CANCELLED" ? (
         <form action={cancelAction} className="flex items-center gap-3">
@@ -170,10 +166,8 @@ export function StatusActions({
       <ActionFeedback state={cancelState} className="mt-3" />
 
       {canDelete ? (
-        <form action={deleteAction} className="mt-4 flex items-center gap-3 border-t-2 border-dashed border-line/30 pt-4">
+        <form action={deleteAction} className="mt-4 flex flex-wrap items-center gap-3 border-t-2 border-dashed border-line/30 pt-4">
           <input type="hidden" name="id" value={id} />
-          <input type="hidden" name="status" value="PUBLISHED" />
-          <input type="hidden" name="_delete" value="1" />
           <PanelSubmit variant="destructive">Delete draft permanently</PanelSubmit>
           <ActionFeedback state={deleteState} className="flex-1" />
         </form>

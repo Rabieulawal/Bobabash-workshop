@@ -1,20 +1,6 @@
-import type { Prisma, WorkshopStatus, WorkshopFormat } from "@prisma/client";
+import type { WorkshopStatus } from "@prisma/client";
 
 /* ── Status helpers ─────────────────────────────────────── */
-
-export function effectiveStatus(workshop: {
-  status: WorkshopStatus;
-  capacity: number | null;
-  manualClosed: boolean;
-  startsAt: Date;
-}): WorkshopStatus {
-  if (workshop.status === "CANCELLED" || workshop.status === "DRAFT" || workshop.status === "COMPLETED") {
-    return workshop.status;
-  }
-  if (workshop.manualClosed) return "REGISTRATION_CLOSED";
-  if (workshop.capacity != null && workshop.capacity > 0 && workshop.capacity <= 0) return "FULLY_BOOKED";
-  return workshop.status;
-}
 
 /** Registration is open for attendees right now. */
 export function isRegistrationOpen(
@@ -138,14 +124,3 @@ export function lahoreDecompose(date: Date): { date: string; time: string } {
   return { date: `${get("year")}-${get("month")}-${get("day")}`, time: `${hh}:${get("minute")}` };
 }
 
-/* ── Misc ───────────────────────────────────────────────── */
-
-export function attendeeCountOf(counts: { _count: { registrations: number } }): number {
-  return counts._count.registrations;
-}
-
-export function truncate(text: string, max = 140): string {
-  return text.length <= max ? text : `${text.slice(0, max - 1).trimEnd()}…`;
-}
-
-export type { Prisma };

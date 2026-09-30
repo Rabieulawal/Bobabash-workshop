@@ -2,7 +2,7 @@
 
 Production URL: **`workshops.bobabashlahore.xyz`**
 
-The app is a standard Next.js App Router project — it deploys to Vercel with **zero custom infrastructure**: no Docker, no always-on server, no filesystem persistence. All state lives in PostgreSQL.
+The app is a standard Next.js App Router project — it deploys to Vercel with **zero custom infrastructure**: no Docker, no always-on server, no filesystem persistence, **no email provider and no file/object storage**. All state lives in PostgreSQL.
 
 ---
 
@@ -15,6 +15,8 @@ The app is a standard Next.js App Router project — it deploys to Vercel with *
    postgresql://USER:PASSWORD@ep-xxxx-pooler.region.aws.neon.tech/neondb?sslmode=require
    ```
 4. Keep the **direct** (non-pooled) string handy too — use it for `prisma migrate deploy` if you hit connection limits.
+
+PostgreSQL is the only data store: organizations, organizers, workshops, registrations, sessions and rate limits all live there.
 
 ## 2. Push the repository to GitHub
 
@@ -37,13 +39,11 @@ git push -u origin main
 | Key | Value | Notes |
 |---|---|---|
 | `DATABASE_URL` | Neon **pooled** connection string | used by the app at runtime |
-| `AUTH_SECRET` | `openssl rand -base64 48` | session token derivation |
-| `CRON_SECRET` | `openssl rand -hex 24` | protects `/api/cron/send-reminders` |
-| `RESEND_API_KEY` | API key from [resend.com](https://resend.com) | omit to log emails to console |
-| `EMAIL_FROM` | `Boba Bash Workshops <no-reply@bobabashlahore.xyz>` | must be a verified Resend sender |
-| `NEXT_PUBLIC_APP_URL` | `https://workshops.bobabashlahore.xyz` | used in emails & metadata |
+| `NEXT_PUBLIC_APP_URL` | `https://workshops.bobabashlahore.xyz` | used in metadata & attendee access links |
 
 Add them to **Production, Preview and Development** environments. Never commit real secrets to git.
+
+That is the complete list: the app deliberately ships without **any** email, cron or storage variables. (If an older deployment of this project still defines keys for email delivery, reminders or file storage, they can safely be deleted — nothing in this codebase reads them.)
 
 ## 5. Run Prisma migrations
 
@@ -65,9 +65,8 @@ Or run it in CI. Vercel's build (`next build`) does **not** run migrations — a
 **Option A — minimal bootstrap (recommended):** temporarily set
 ```
 SEED_SUPER_ADMIN_PASSWORD="a-long-random-password"
-ALLOW_PRODUCTION_SEED="true"
 ```
-then run `npm run db:seed`, and **remove both variables immediately after**. The seed also creates the demo organizations and sample workshops — delete any you don't want from the admin UI (or edit `prisma/seed.ts` before running).
+then run `npm run db:seed`, and **remove the variable immediately after**. The seed also creates the demo organizations and sample (online) workshops — delete any you don't want from the admin UI (or edit `prisma/seed.ts` before running).
 
 **Option B — admin-only start:** skip seeding entirely and create the first organizer directly against the DB:
 ```bash
@@ -94,25 +93,22 @@ Open `https://workshops.bobabashlahore.xyz` — confirm the padlock, no mixed-co
 
 ## 10–12. Post-deploy smoke tests
 
-1. **Public registration:** open any published workshop → enter an email → **I'm Going** → success state; the email arrives (or is console-logged if Resend isn't configured yet). Re-submitting the same email → "already registered".
-2. **Organizer login:** `/admin/login` → log in → change password at `/admin/account` → create a workshop → add a meeting link → verify it on the public page.
+1. **Public registration:** open any published workshop → enter an email → **I'm Going** → the success card immediately shows the private `/my/<token>` link with **Copy** and **Open my workshop**. No email is sent (there is no email provider). Re-submitting the same email re-issues a fresh link.
+2. **Organizer login:** `/admin/login` → log in → change password at `/admin/account` → create an **online** workshop (there is no format or venue field) → add a meeting link → verify the **Join Workshop** button on the public page.
 3. **Admin permissions:** log in as an Organizer and visit `/admin/organizers` → you should be bounced to `/admin?error=forbidden`. Log in as Super Admin → manage organizers/organizations.
 4. **Health check:** `https://workshops.bobabashlahore.xyz/api/health` → `{"status":"ok","db":"up"}`.
 
-## 13. Reminders cron
+## 13. What does *not* run in production
 
-`vercel.json` ships with a daily cron:
-```
-0 13 * * *  →  GET /api/cron/send-reminders
-```
-(13:00 UTC = 18:00 PKT). Vercel automatically sends `Authorization: Bearer $CRON_SECRET`. It emails attendees of tomorrow's workshops. On hobby plans you may need to enable cron usage in project settings; on Pro it runs by default.
+- No cron jobs (delete any legacy Vercel Cron entries — the repo no longer has a `vercel.json`).
+- No email delivery, no email queue, no email templates.
+- No file uploads or object storage — brand assets are committed under `public/` and served statically.
 
 ## Troubleshooting
 
 | Symptom | Fix |
 |---|---|
 | `P1001 can't reach database` | Check `DATABASE_URL`, Neon host, `?sslmode=require` |
-| Emails not arriving | Verify `RESEND_API_KEY` + `EMAIL_FROM` is a verified domain; check Vercel function logs for `[email]` errors |
-| 401 on `/api/cron/send-reminders` | `CRON_SECRET` env var mismatch (or missing Authorization header from a manual call) |
 | Workshop page 404 after creation | It's probably still a **Draft** — publish it from the manage page |
+| Attendee lost their access link | They re-register with the same email on the workshop page — the same registration is reused and a fresh link is issued (no admin action needed) |
 | Middleware/domain issues | Confirm `NEXT_PUBLIC_APP_URL` matches the final domain exactly (no trailing slash) |

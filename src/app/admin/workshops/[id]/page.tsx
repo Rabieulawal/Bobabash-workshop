@@ -61,7 +61,7 @@ export default async function ManageWorkshopPage({
               <h1 className="mt-2 font-display text-2xl font-bold text-ink sm:text-3xl">{workshop.title}</h1>
               <p className="mt-1 text-sm text-ink-muted">
                 {dayLabel(workshop.startsAt)}, {formatDate(workshop.startsAt)} · {formatTimeRange(workshop.startsAt, workshop.endsAt)} ·{" "}
-                {workshop.format === "ONLINE" ? "Online" : workshop.location ?? "In person"}
+                Online · {workshop.meetingUrl ? "meeting link set" : "no meeting link yet"}
               </p>
             </div>
             <div className="flex flex-wrap gap-2">

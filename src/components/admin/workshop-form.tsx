@@ -8,7 +8,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import type { ActionState } from "@/lib/action-utils";
 
 export type WorkshopFormValues = {
@@ -18,8 +17,6 @@ export type WorkshopFormValues = {
   date: string;
   startTime: string;
   endTime: string;
-  format: "ONLINE" | "IN_PERSON";
-  location: string | null;
   capacity: number | null;
   meetingUrl: string | null;
   coverImageUrl: string | null;
@@ -100,7 +97,11 @@ export function WorkshopForm({
       </fieldset>
 
       <fieldset className="brand-card flex flex-col gap-5 rounded-xl p-6">
-        <legend className="sr-only">Schedule and format</legend>
+        <legend className="sr-only">Schedule</legend>
+        <p className="text-sm text-ink-muted">
+          All workshops on this platform are <span className="font-semibold text-ink">online</span>. Add a meeting
+          link below whenever it&apos;s ready.
+        </p>
         <div className="grid gap-5 sm:grid-cols-3">
           <div>
             <Label htmlFor="date">Date *</Label>
@@ -119,21 +120,6 @@ export function WorkshopForm({
           </div>
         </div>
         <p className="text-xs text-ink-soft">Times are in Pakistan Standard Time (Lahore).</p>
-
-        <div className="grid gap-5 sm:grid-cols-2">
-          <div>
-            <Label htmlFor="format">Format *</Label>
-            <Select id="format" name="format" defaultValue={values.format ?? "IN_PERSON"}>
-              <option value="IN_PERSON">In person</option>
-              <option value="ONLINE">Online</option>
-            </Select>
-          </div>
-          <div>
-            <Label htmlFor="location">Location (for in-person)</Label>
-            <Input id="location" name="location" defaultValue={values.location ?? ""} placeholder="e.g. Boba Bash HQ, Gulberg, Lahore" />
-            {fieldErrors?.location ? <p className="field-error">{fieldErrors.location}</p> : null}
-          </div>
-        </div>
       </fieldset>
 
       <fieldset className="brand-card flex flex-col gap-5 rounded-xl p-6">
@@ -155,7 +141,10 @@ export function WorkshopForm({
           <div>
             <Label htmlFor="meetingUrl">Meeting link (optional)</Label>
             <Input id="meetingUrl" name="meetingUrl" type="url" placeholder="https://meet.google.com/…" defaultValue={values.meetingUrl ?? ""} />
-            <p className="mt-1 text-xs text-ink-soft">Google Meet, Zoom, Teams or any https:// link. You can add it later.</p>
+            <p className="mt-1 text-xs text-ink-soft">
+              Google Meet, Zoom, Teams, Discord or any https:// link. You can add or change it later — attendees see a
+              <span className="font-semibold"> Join Workshop</span> button once it&apos;s set.
+            </p>
             {fieldErrors?.meetingUrl ? <p className="field-error">{fieldErrors.meetingUrl}</p> : null}
           </div>
         </div>
@@ -194,7 +183,9 @@ export function WorkshopForm({
             ))}
           </Select>
           <p className="mt-1 text-xs text-ink-soft">
-            {values.id ? "Attendees are notified automatically when you cancel via the workshop page." : "Start as a draft to preview, or publish right away."}
+            {values.id
+              ? "Cancelling hides the workshop and blocks new sign-ups; existing registrations are kept on record."
+              : "Start as a draft to preview, or publish right away."}
           </p>
         </div>
       </fieldset>
@@ -210,5 +201,3 @@ export function WorkshopForm({
     </form>
   );
 }
-
-export { Switch };

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { MapPin, Video, Users } from "lucide-react";
+import { Video, Users } from "lucide-react";
 import type { WorkshopStatus } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
 import { StatusBadge } from "./status-badge";
@@ -11,8 +11,6 @@ export type WorkshopCardProps = {
   description: string;
   startsAt: Date;
   endsAt: Date;
-  format: "ONLINE" | "IN_PERSON";
-  location: string | null;
   status: WorkshopStatus;
   organizationName: string;
   organizationSlug: string;
@@ -54,15 +52,7 @@ export function WorkshopCard({ workshop }: { workshop: WorkshopCardProps }) {
         </div>
         <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink-muted">
           <span className="inline-flex items-center gap-1">
-            {workshop.format === "ONLINE" ? (
-              <>
-                <Video className="h-3.5 w-3.5" aria-hidden="true" /> Online
-              </>
-            ) : (
-              <>
-                <MapPin className="h-3.5 w-3.5" aria-hidden="true" /> {workshop.location ?? "In person"}
-              </>
-            )}
+            <Video className="h-3.5 w-3.5" aria-hidden="true" /> Online workshop
           </span>
         </div>
 

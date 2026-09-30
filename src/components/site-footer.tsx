@@ -12,7 +12,6 @@ export function SiteFooter() {
           <Link href="/workshops" className="hover:text-ink hover:underline">All workshops</Link>
           <Link href="/boba-bash-lahore" className="hover:text-ink hover:underline">Boba Bash Lahore</Link>
           <Link href="/other-events" className="hover:text-ink hover:underline">Other Events</Link>
-          <Link href="/find-my-workshops" className="hover:text-ink hover:underline">Find my workshops</Link>
         </nav>
       </div>
     </footer>

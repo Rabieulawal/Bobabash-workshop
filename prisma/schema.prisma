@@ -16,11 +16,6 @@ enum Role {
   WORKSHOP_MANAGER
 }
 
-enum WorkshopFormat {
-  ONLINE
-  IN_PERSON
-}
-
 enum WorkshopStatus {
   DRAFT
   PUBLISHED
@@ -94,14 +89,10 @@ model Workshop {
   coverImageUrl      String?
   startsAt           DateTime
   endsAt             DateTime
-  format             WorkshopFormat
-  location           String?
   meetingUrl         String?
-  meetingUrlAddedAt  DateTime?
   capacity           Int?
   status             WorkshopStatus  @default(DRAFT)
   manualClosed       Boolean         @default(false) // organizer closed registration
-  remindersSentAt    DateTime?
   createdAt          DateTime        @default(now())
   updatedAt          DateTime        @updatedAt
 
@@ -122,7 +113,6 @@ model Registration {
   status         RegistrationStatus @default(CONFIRMED)
   secureTokenHash String
   tokenExpiresAt DateTime
-  notifiedAt     DateTime?
   createdAt      DateTime           @default(now())
   updatedAt      DateTime           @updatedAt
 

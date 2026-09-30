@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
-import { isRegistrationOpen, slugify } from "@/lib/datetime";
+import { slugify } from "@/lib/datetime";
 
 /**
  * Reusable workshop queries shared by public pages and dashboards.
@@ -16,7 +16,6 @@ const cardInclude = {
 
 function wherePublic(query: {
   when: "upcoming" | "today" | "tomorrow" | "week";
-  format: "all" | "online" | "in_person";
   org?: string;
   q?: string;
 }): Prisma.WorkshopWhereInput {
@@ -28,7 +27,6 @@ function wherePublic(query: {
 
   return {
     status: { in: ["PUBLISHED", "FULLY_BOOKED"] },
-    ...(query.format === "online" ? { format: "ONLINE" } : query.format === "in_person" ? { format: "IN_PERSON" } : {}),
     ...(orgWhere ? { organization: orgWhere } : {}),
     ...(query.q
       ? {
@@ -45,7 +43,6 @@ function wherePublic(query: {
 
 export async function listWorkshops(query: {
   when: "upcoming" | "today" | "tomorrow" | "week";
-  format: "all" | "online" | "in_person";
   org?: string;
   q?: string;
   sort: "soonest" | "popular" | "newest";
@@ -114,16 +111,6 @@ export async function listOrganizationsPublic() {
     orderBy: [{ isFeatured: "desc" }, { name: "asc" }],
   });
   return orgs;
-}
-
-/** Reserved capacity computation used by registration actions. */
-export function registrationOpenFor(workshop: {
-  status: string;
-  manualClosed: boolean;
-  startsAt: Date;
-  capacity: number | null;
-}, confirmedCount: number): boolean {
-  return isRegistrationOpen(workshop as never, confirmedCount, workshop.capacity);
 }
 
 export async function uniqueSlugFor(title: string, model: "workshop" | "organization"): Promise<string> {

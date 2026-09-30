@@ -10,8 +10,8 @@ export function absoluteUrl(path: string): string {
 export const SITE = {
   name: "Boba Bash Workshops",
   shortName: "Boba Bash",
-  tagline: "Hands-on workshops, meetups & community events — Lahore and beyond.",
+  tagline: "Live online workshops, meetups & community events — Lahore and beyond.",
   description:
-    "Browse and join free community workshops by Boba Bash Lahore and partner events. No account needed — just enter your email and you're going.",
+    "Browse and join free online workshops by Boba Bash Lahore and partner events. No account needed — enter your email and your private access link appears instantly.",
   url: appUrl,
 };

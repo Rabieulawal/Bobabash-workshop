@@ -14,11 +14,6 @@ const WHEN_OPTIONS = [
   { value: "tomorrow", label: "Tomorrow" },
   { value: "week", label: "This week" },
 ];
-const FORMAT_OPTIONS = [
-  { value: "all", label: "Online + in person" },
-  { value: "online", label: "Online" },
-  { value: "in_person", label: "In person" },
-];
 const SORT_OPTIONS = [
   { value: "soonest", label: "Sort: Soonest" },
   { value: "popular", label: "Sort: Most popular" },
@@ -84,18 +79,6 @@ export function WorkshopFilters({
           className="h-10 w-auto min-w-[130px] py-0"
         >
           {WHEN_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value}>
-              {o.label}
-            </option>
-          ))}
-        </Select>
-        <Select
-          aria-label="Filter by format"
-          value={params.get("format") ?? "all"}
-          onChange={(e) => update("format", e.target.value)}
-          className="h-10 w-auto min-w-[150px] py-0"
-        >
-          {FORMAT_OPTIONS.map((o) => (
             <option key={o.value} value={o.value}>
               {o.label}
             </option>

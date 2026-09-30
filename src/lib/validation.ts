@@ -66,6 +66,8 @@ export const slugSchema = z
 export const registerAttendeeSchema = z.object({
   slug: slugSchema,
   email: emailSchema,
+  /** "recover" asks for an existing access link instead of creating a registration. */
+  mode: z.enum(["register", "recover"]).optional().default("register"),
 });
 export type RegisterAttendeeInput = z.infer<typeof registerAttendeeSchema>;
 
@@ -108,8 +110,6 @@ export const workshopCoreSchema = {
   date: dateString,
   startTime: timeString,
   endTime: timeString,
-  format: z.enum(["ONLINE", "IN_PERSON"]),
-  location: optionalText(200),
   capacity: z
     .union([
       z.coerce.number().int("Whole numbers only").min(1, "Capacity must be at least 1").max(100000),
@@ -126,10 +126,6 @@ export const workshopCoreSchema = {
 
 export const createWorkshopSchema = z
   .object({ ...workshopCoreSchema, status: z.enum(["DRAFT", "PUBLISHED"]) })
-  .refine((v) => v.format !== "IN_PERSON" || (v.location && v.location.length > 0), {
-    message: "Location is required for in-person workshops",
-    path: ["location"],
-  })
   .refine((v) => v.endTime > v.startTime, {
     message: "End time must be after start time",
     path: ["endTime"],
@@ -138,10 +134,6 @@ export type CreateWorkshopInput = z.infer<typeof createWorkshopSchema>;
 
 export const updateWorkshopSchema = z
   .object({ ...workshopCoreSchema })
-  .refine((v) => v.format !== "IN_PERSON" || (v.location && v.location.length > 0), {
-    message: "Location is required for in-person workshops",
-    path: ["location"],
-  })
   .refine((v) => v.endTime > v.startTime, {
     message: "End time must be after start time",
     path: ["endTime"],
@@ -153,7 +145,6 @@ export const rescheduleWorkshopSchema = z
     date: dateString,
     startTime: timeString,
     endTime: timeString,
-    notify: booleanish,
   })
   .refine((v) => v.endTime > v.startTime, {
     message: "End time must be after start time",
@@ -162,7 +153,6 @@ export const rescheduleWorkshopSchema = z
 
 export const meetingLinkSchema = z.object({
   meetingUrl: optionalHttpsUrl,
-  notify: booleanish,
 });
 
 export const registrationActionSchema = z.object({
@@ -220,10 +210,7 @@ export type OrganizationInput = z.infer<typeof organizationSchema>;
 export const workshopQuerySchema = z.object({
   q: z.string().trim().max(80).optional(),
   when: z.enum(["upcoming", "today", "tomorrow", "week"]).optional().default("upcoming"),
-  format: z.enum(["all", "online", "in_person"]).optional().default("all"),
   org: z.string().trim().max(96).optional(), // org slug or "other-events"
   sort: z.enum(["soonest", "popular", "newest"]).optional().default("soonest"),
 });
 export type WorkshopQuery = z.infer<typeof workshopQuerySchema>;
-
-export const resendAccessSchema = z.object({ email: emailSchema });
