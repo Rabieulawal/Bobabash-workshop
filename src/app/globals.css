@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── Boba Bash brand tokens (from the official branding guide) ── */
 :root {
   --bubble: #a9d8ee;
   --bubble-ink: #274156;
@@ -16,23 +15,21 @@
   --mint: #c0dfc6;
   --danger: #b4432f;
   --success: #3d7a44;
-
-  /* shadcn-compatible HSL vars */
-  --background: 43 47% 95%;        /* #fbf6e8 */
-  --foreground: 27 34% 17%;        /* #3d2b18 */
+  --background: 43 47% 95%;        
+  --foreground: 27 34% 17%;        
   --card: 43 47% 95%;
   --card-foreground: 27 34% 17%;
   --popover: 43 47% 95%;
   --popover-foreground: 27 34% 17%;
-  --primary: 27 34% 17%;           /* ink */
+  --primary: 27 34% 17%;           
   --primary-foreground: 43 47% 95%;
-  --secondary: 203 60% 80%;        /* bubble */
-  --secondary-foreground: 203 36% 24%; /* bubble-ink */
-  --muted: 41 39% 89%;             /* surface-alt */
-  --muted-foreground: 30 24% 34%;  /* ink-muted */
+  --secondary: 203 60% 80%;        
+  --secondary-foreground: 203 36% 24%; 
+  --muted: 41 39% 89%;             
+  --muted-foreground: 30 24% 34%;  
   --accent: 41 39% 89%;
   --accent-foreground: 27 34% 17%;
-  --destructive: 11 58% 45%;       /* #b4432f */
+  --destructive: 11 58% 45%;       
   --destructive-foreground: 0 0% 100%;
   --border: 27 34% 17%;
   --input: 27 34% 17%;
@@ -48,7 +45,7 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background text-foreground font-display antialiased;
     background-image: radial-gradient(rgba(61, 43, 24, 0.045) 1px, transparent 1px);
     background-size: 22px 22px;
   }
@@ -62,7 +59,6 @@
 }
 
 @layer components {
-  /* Speech-bubble pill heading — signature Boba Bash element */
   .bubble-pill {
     @apply relative inline-block;
   }
@@ -73,18 +69,16 @@
     @apply relative z-10 inline-flex items-center gap-3 rounded-full border-2 border-bubble-ink bg-bubble px-6 py-2.5;
   }
 
-  /* Card with hard offset shadow */
   .brand-card {
     @apply border-2 border-line bg-surface shadow-card;
   }
 
-  /* Button with pressed control shadow */
   .brand-control {
     @apply border-2 border-line shadow-control;
   }
 
   .brand-input {
-    @apply flex h-11 w-full rounded-lg border-2 border-line bg-white px-3.5 py-2 font-sans text-[15px] text-ink shadow-control placeholder:text-ink-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bubble-ink focus-visible:ring-offset-2 focus-visible:ring-offset-surface disabled:cursor-not-allowed disabled:opacity-60;
+    @apply flex h-11 w-full rounded-lg border-2 border-line bg-white px-3.5 py-2 font-display text-[15px] text-ink shadow-control placeholder:text-ink-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bubble-ink focus-visible:ring-offset-2 focus-visible:ring-offset-surface disabled:cursor-not-allowed disabled:opacity-60;
   }
 
   .brand-label {

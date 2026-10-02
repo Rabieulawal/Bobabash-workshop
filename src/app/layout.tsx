@@ -1,24 +1,10 @@
 import type { Metadata } from "next";
-import { Baloo_2, Poppins, JetBrains_Mono } from "next/font/google";
 import { SITE } from "@/lib/app-url";
+import "@fontsource/host-grotesk/400.css";
+import "@fontsource/host-grotesk/700.css";
+import "@fontsource/jetbrains-mono/400.css";
+import "@fontsource/jetbrains-mono/700.css";
 import "./globals.css";
-
-const display = Baloo_2({
-  subsets: ["latin"],
-  weight: ["500", "600", "700", "800"],
-  variable: "--font-display",
-});
-
-const sans = Poppins({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-sans",
-});
-
-const mono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
@@ -43,8 +29,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${display.variable} ${sans.variable} ${mono.variable}`}>
-      <body className="flex min-h-screen flex-col">{children}</body>
+    <html lang="en">
+      <body className="flex min-h-screen flex-col font-display antialiased bg-background text-foreground">
+        {children}
+      </body>
     </html>
   );
 }

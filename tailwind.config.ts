@@ -7,9 +7,8 @@ const config: Config = {
     container: { center: true, padding: "1.25rem", screens: { "2xl": "1200px" } },
     extend: {
       fontFamily: {
-        display: ["var(--font-display)", "Baloo 2", "cursive"],
-        sans: ["var(--font-sans)", "Poppins", "sans-serif"],
-        mono: ["var(--font-mono)", "JetBrains Mono", "monospace"],
+        display: ['"Host Grotesk"', "sans-serif"],
+        mono: ['"JetBrains Mono"', "monospace"],
       },
       colors: {
         border: "hsl(var(--border))",

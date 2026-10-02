@@ -6,10 +6,10 @@ import { appUrl } from "@/lib/app-url";
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b-2 border-line bg-surface/95 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b-2 border-line bg-surface">
       <div className="container flex h-16 items-center justify-between gap-3">
         <Link href="/" className="flex items-center gap-2.5 focus-visible:outline-none" aria-label="Boba Bash Workshops home">
-          <Image src="/cup.png" alt="" width={36} height={36} className="h-9 w-9" priority />
+          <Image src="/cup.png" alt="" width={36} height={30} priority />
           <span className="hidden font-display text-xl font-bold text-ink min-[420px]:inline">
             Boba Bash <span className="text-bubble-ink">Workshops</span>
           </span>

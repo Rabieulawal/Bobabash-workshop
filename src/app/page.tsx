@@ -45,8 +45,8 @@ export default async function HomePage({
                 <span className="font-display text-lg font-bold text-bubble-ink">Workshops</span>
               </div>
             </div>
-            <h1 className="max-w-2xl font-display text-4xl font-bold leading-tight text-ink sm:text-5xl">
-              Learn something new at <span className="text-bubble-ink">Boba Bash</span> 🧋
+            <h1 className="max-w-3xl font-display text-4xl font-bold leading-tight text-ink sm:text-6xl">
+              Learn something new at <span className="text-bubble-ink">Boba Bash</span>
             </h1>
             <p className="max-w-2xl text-lg text-ink-muted">
               Live online workshops and community events. Pick one, enter your email — your private
